@@ -12,11 +12,14 @@ bool isFile(const std::string& path) {
     return access(path.c_str(), F_OK) == 0;
 }
 
-std::string findAppimagetool(const char* const argv0) {
-    std::vector<char> argv0Buf(strlen(argv0) + 1);
-    strcpy(argv0Buf.data(), argv0);
+std::string findAppimagetool() {
+    std::vector<char> buf(PATH_MAX, '\0');
 
-    auto currentDirPath = std::string(dirname(argv0Buf.data()));
+    if (readlink("/proc/self/exe", buf.data(), buf.size()) < 0) {
+        return "";
+    }
+
+    auto currentDirPath = std::string(dirname(buf.data()));
 
     // search next to current binary
     std::vector<std::string> knownPaths = {
@@ -71,7 +74,7 @@ int main(const int argc, const char* const* const argv) {
         return 0;
     }
 
-    auto pathToAppimagetool = findAppimagetool(argv[0]);
+    auto pathToAppimagetool = findAppimagetool();
 
     execl(pathToAppimagetool.c_str(), "appimagetool", appdir.Get().c_str(), nullptr);
 
