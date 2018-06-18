@@ -52,6 +52,7 @@ int main(const int argc, const char* const* const argv) {
 
     args::ValueFlag<std::string> appdir(parser, "AppDir", "AppDir to package as AppImage", {"appdir"});
     args::Flag pluginType(parser, "", "Return plugin type and exit", {"plugin-type"});
+    args::Flag pluginApiVersion(parser, "", "Return plugin type and exit", {"plugin-api-version"});
 
     try {
         parser.ParseCLI(argc, argv);
@@ -63,15 +64,20 @@ int main(const int argc, const char* const* const argv) {
         return 1;
     }
 
-    if (!appdir) {
-        std::cerr << "--appdir parameter required" << std::endl << std::endl;
-        std::cout << parser;
-        return 1;
+    if (pluginApiVersion) {
+        std::cout << "0" << std::endl;
+        return 0;
     }
 
     if (pluginType) {
         std::cout << "output" << std::endl;
         return 0;
+    }
+
+    if (!appdir) {
+        std::cerr << "--appdir parameter required" << std::endl << std::endl;
+        std::cout << parser;
+        return 1;
     }
 
     auto pathToAppimagetool = findAppimagetool();
