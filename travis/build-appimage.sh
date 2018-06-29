@@ -4,13 +4,13 @@ set -e
 set -x
 
 # use RAM disk if possible
-if [ "$BIONIC" == "" ] && [ -d /dev/shm ]; then
+if [ "$CI" == "" ] && [ -d /dev/shm ]; then
     TEMP_BASE=/dev/shm
 else
     TEMP_BASE=/tmp
 fi
 
-BUILD_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdate-build-XXXXXX)
+BUILD_DIR=$(mktemp -d -p "$TEMP_BASE" linuxdeploy-plugin-appimage-build-XXXXXX)
 
 cleanup () {
     if [ -d "$BUILD_DIR" ]; then
@@ -37,7 +37,7 @@ pushd AppDir/usr/bin/; wget https://github.com/AppImage/AppImageKit/releases/dow
 
 wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
 chmod +x linuxdeploy*.AppImage
-./linuxdeploy-x86_64.AppImage -n linuxdeploy-plugin-appimage --appdir AppDir --init-appdir -v0 \
+./linuxdeploy-x86_64.AppImage -n linuxdeploy-plugin-appimage --appdir AppDir --init-appdir \
     -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg
 
