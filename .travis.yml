@@ -5,6 +5,10 @@ sudo: required
 #  apt:
 #    update: true
 
+env:
+  - ARCH=x86_64
+  - ARCH=i386
+
 script:
   - bash -xe travis/build-appimage.sh
 

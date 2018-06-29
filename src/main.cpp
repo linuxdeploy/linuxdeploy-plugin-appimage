@@ -26,6 +26,7 @@ std::string findAppimagetool() {
         currentDirPath + "/appimagetool",
         currentDirPath + "/appimagetool.AppImage",
         currentDirPath + "/appimagetool-x86_64.AppImage",
+        currentDirPath + "/appimagetool-i686.AppImage",
     };
 
     std::stringstream ss;
@@ -37,6 +38,7 @@ std::string findAppimagetool() {
         knownPaths.push_back(currentPath + "/appimagetool");
         knownPaths.push_back(currentPath + "/appimagetool.AppImage");
         knownPaths.push_back(currentPath + "/appimagetool-x86_64.AppImage");
+        knownPaths.push_back(currentPath + "/appimagetool-i686.AppImage");
     }
 
     for (const auto& path : knownPaths) {
