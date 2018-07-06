@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <libgen.h>
 #include <unistd.h>
+#include <vector>
 
 // library includes
 #include <args.hxx>
@@ -46,7 +47,7 @@ std::string findAppimagetool() {
             return path;
     }
 
-    throw std::runtime_error("Could not find appimagetool in PATH");
+    return "";
 }
 
 int main(const int argc, const char* const* const argv) {
@@ -84,7 +85,42 @@ int main(const int argc, const char* const* const argv) {
 
     auto pathToAppimagetool = findAppimagetool();
 
-    execl(pathToAppimagetool.c_str(), "appimagetool", appdir.Get().c_str(), nullptr);
+    if (pathToAppimagetool.empty()) {
+        std::cerr << "Could not find appimagetool in PATH" << std::endl;
+        return 1;
+    }
+
+    std::cout << "Found appimagetool: " << pathToAppimagetool << std::endl;
+
+    std::vector<char*> args;
+    args.push_back(strdup("appimagetool"));
+    args.push_back(strdup(appdir.Get().c_str()));
+
+    auto updateInformation = getenv("UPDATE_INFORMATION");
+
+    // also provide shorter version of the environment variable
+    if (updateInformation == nullptr) {
+        updateInformation = getenv("UPD_INFO");
+    }
+
+    if (updateInformation != nullptr) {
+        std::cout << "Embedding update information: " << updateInformation << std::endl;
+        args.push_back(strdup("-u"));
+        args.push_back(updateInformation);
+    }
+
+    args.push_back(nullptr);
+
+    std::cout << "Running command: " << pathToAppimagetool;
+    for (auto it = args.begin() + 1; it != args.end(); it++) {
+        std::cout << " " << "\"" << *it << "\"";
+    }
+    std::cout << std::endl;
+
+    // separate appimagetool output from plugin's output
+    std::cout << std::endl;
+
+    execv(pathToAppimagetool.c_str(), args.data());
 
     auto error = errno;
     std::cerr << "execl() failed: " << strerror(error) << std::endl;
