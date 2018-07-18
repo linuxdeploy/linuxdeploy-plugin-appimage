@@ -109,6 +109,10 @@ int main(const int argc, const char* const* const argv) {
         args.push_back(updateInformation);
     }
 
+    if (getenv("SIGN") != nullptr) {
+        args.push_back(strdup("-s"));
+    }
+
     args.push_back(nullptr);
 
     std::cout << "Running command: " << pathToAppimagetool;
