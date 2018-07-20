@@ -113,6 +113,10 @@ int main(const int argc, const char* const* const argv) {
         args.push_back(strdup("-s"));
     }
 
+    if (getenv("VERBOSE") != nullptr) {
+        args.push_back(strdup("-v"));
+    }
+
     args.push_back(nullptr);
 
     std::cout << "Running command: " << pathToAppimagetool;
