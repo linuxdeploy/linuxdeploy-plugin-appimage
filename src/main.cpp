@@ -123,11 +123,11 @@ int main(const int argc, const char* const* const argv) {
 
     args.push_back(nullptr);
 
-    std::cout << "Running command: " << pathToAppimagetool;
-    for (auto it = args.begin() + 1; it != args.end(); it++) {
-        std::cout << " " << "\"" << *it << "\"";
+    std::cerr << "Running command: " << pathToAppimagetool;
+    for (auto it = args.begin() + 1; it != args.end() - 1; it++) {
+        std::cerr << " " << "\"" << *it << "\"";
     }
-    std::cout << std::endl;
+    std::cerr << std::endl << std::endl;
 
     // separate appimagetool output from plugin's output
     std::cout << std::endl;
