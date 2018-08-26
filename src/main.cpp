@@ -120,6 +120,8 @@ int main(const int argc, const char* const* const argv) {
     if (getenv("OUTPUT") != nullptr) {
         args.push_back(strdup(getenv("OUTPUT")));
     }
+    
+    args.push_back(strdup("-g"));
 
     args.push_back(nullptr);
 
