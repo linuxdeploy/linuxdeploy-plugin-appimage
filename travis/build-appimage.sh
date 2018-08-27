@@ -55,8 +55,7 @@ mv squashfs-root/ AppDir/appimagetool-prefix/
 ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 
 # deploy linuxdeploy-plugin-appimage
-./linuxdeploy-"$ARCH".AppImage -n linuxdeploy-plugin-appimage --appdir AppDir --init-appdir \
-    -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
+./linuxdeploy-"$ARCH".AppImage --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg
 
 AppDir/AppRun --appdir AppDir
