@@ -51,7 +51,6 @@ chmod +x linuxdeploy-"$ARCH".AppImage
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
 chmod +x appimagetool-"$AIK_ARCH".AppImage
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
-./linuxdeploy-"$ARCH".AppImage --appdir squashfs-root/
 mv squashfs-root/ AppDir/appimagetool-prefix/
 ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 
