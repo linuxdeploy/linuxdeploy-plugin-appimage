@@ -54,6 +54,8 @@ chmod +x appimagetool-"$AIK_ARCH".AppImage
 mv squashfs-root/ AppDir/appimagetool-prefix/
 ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 
+export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
+
 # deploy linuxdeploy-plugin-appimage
 ./linuxdeploy-"$ARCH".AppImage --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg
