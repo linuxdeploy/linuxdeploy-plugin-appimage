@@ -62,4 +62,4 @@ export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|conti
 
 AppDir/AppRun --appdir AppDir
 
-mv linuxdeploy-plugin-appimage*.AppImage "$OLD_CWD"/
+mv linuxdeploy-plugin-appimage*.AppImage* "$OLD_CWD"/
