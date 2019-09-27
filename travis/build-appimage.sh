@@ -44,12 +44,16 @@ make install DESTDIR=AppDir
 AIK_ARCH="$ARCH"
 [ "$ARCH" == "i386" ] && AIK_ARCH="i686"
 
-wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-"$ARCH".AppImage
-chmod +x linuxdeploy-"$ARCH".AppImage
+wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-centos6-"$ARCH".AppImage
+chmod +x linuxdeploy-centos6-"$ARCH".AppImage
 
 # bundle appimagetool
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
+
 chmod +x appimagetool-"$AIK_ARCH".AppImage
+
+sed -i 's/AI\x02/\x00\x00\x00/' {appimagetool,linuxdeploy}*.AppImage
+
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ AppDir/appimagetool-prefix/
 ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
@@ -57,7 +61,9 @@ ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
 
 # deploy linuxdeploy-plugin-appimage
-./linuxdeploy-"$ARCH".AppImage --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
+sed -i 's|AI\x02|\x00\x00\x00|' linuxdeploy-centos6-"$ARCH".AppImage
+./linuxdeploy-centos6-"$ARCH".AppImage --appimage-extract-and-run \
+     --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg
 
 AppDir/AppRun --appdir AppDir

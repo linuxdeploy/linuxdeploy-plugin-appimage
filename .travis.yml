@@ -1,24 +1,12 @@
 language: cpp
-sudo: required
 
-#plugins:
-#  apt:
-#    update: true
+services:
+  - docker
 
 matrix:
   include:
     - env: ARCH=x86_64
     - env: ARCH=i386
-      addons:
-        apt:
-          update: true
-          packages:
-            - gcc-multilib
-            - g++-multilib
-            - zlib1g:i386
-            - libfuse2:i386
-            - libffi-dev
-            - libcairo2:i386
 
 script:
   - bash -xe travis/build-appimage.sh
