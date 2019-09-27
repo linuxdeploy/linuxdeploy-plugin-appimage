@@ -9,7 +9,7 @@ matrix:
     - env: ARCH=i386
 
 script:
-  - bash -xe travis/build-appimage.sh
+  - bash -xe travis/build-docker.sh
 
 after_success:
   - ls -lh
