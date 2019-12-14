@@ -14,9 +14,12 @@ RUN yum install -y yum-utils && \
 
 # the shell wrapper takes care of enabling devtoolset and running a shell properly
 # unfortunately this is the easiest and most solid workaround to the limitations of the scl command
-COPY entrypoint.sh /
+COPY entrypoint-centos6.sh /entrypoint.sh
 ENV ARCH=i386
 ENTRYPOINT ["/entrypoint.sh"]
 SHELL ["/entrypoint.sh", "bash", "-x", "-c"]
 
 RUN wget https://artifacts.assassinate-you.net/artifactory/cmake-centos6/cmake-v3.15.3-i386.tar.gz -O- | tar xz --strip-components=1 -C/usr/local
+
+CMD ["bash"]
+

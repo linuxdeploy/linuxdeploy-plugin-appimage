@@ -1,17 +1,11 @@
 #! /bin/bash
-
 set -xe
 
 old_cwd=$(readlink -f .)
 here=$(readlink -f $(dirname "$0"))
 
-DOCKERFILE="$here"/Dockerfile
-IMAGE=linuxdeploy-plugin-appimage-build
-
-if [ "$ARCH" == "i386" ]; then
-    DOCKERFILE="$DOCKERFILE".i386
-    IMAGE="$IMAGE".i386
-fi
+DOCKERFILE="$here/Dockerfile.$ARCH"
+IMAGE="linuxdeploy-build-$ARCH"
 
 (cd "$here" && docker build -f "$DOCKERFILE" -t "$IMAGE" .)
 

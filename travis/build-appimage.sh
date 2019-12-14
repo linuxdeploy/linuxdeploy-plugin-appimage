@@ -30,6 +30,10 @@ if [ "$ARCH" == "x86_64" ]; then
     EXTRA_CMAKE_ARGS=()
 elif [ "$ARCH" == "i386" ]; then
     EXTRA_CMAKE_ARGS=("-DCMAKE_TOOLCHAIN_FILE=$REPO_ROOT/cmake/toolchains/i386-linux-gnu.cmake")
+elif [ "$ARCH" == "armhf" ]; then
+    EXTRA_CMAKE_ARGS=()
+elif [ "$ARCH" == "aarch64" ]; then
+    EXTRA_CMAKE_ARGS=()
 else
     echo "Architecture not supported: $ARCH" 1>&2
     exit 1

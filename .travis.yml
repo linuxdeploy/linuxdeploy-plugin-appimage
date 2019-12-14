@@ -7,6 +7,11 @@ matrix:
   include:
     - env: ARCH=x86_64
     - env: ARCH=i386
+    - env: ARCH=armhf
+    - env: ARCH=aarch64
+
+install:
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
 script:
   - bash -xe travis/build-docker.sh
