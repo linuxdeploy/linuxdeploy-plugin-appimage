@@ -12,12 +12,23 @@ if(USE_CCACHE)
     endif()
 endif()
 
-# main executable
-add_executable(linuxdeploy-plugin-appimage main.cpp)
+set(_target_name linuxdeploy-plugin-appimage)
 
-target_link_libraries(linuxdeploy-plugin-appimage args)
+# main executable
+add_executable(${_target_name} main.cpp)
+
+target_link_libraries(${_target_name} args)
+
+set(_cflags
+    -static
+    -static-libstdc++
+    -static-libgcc
+    -flto
+)
+target_compile_options(${_target_name} PUBLIC ${_cflags})
+target_link_options(${_target_name} PUBLIC ${_cflags})
 
 install(
-    TARGETS linuxdeploy-plugin-appimage
+    TARGETS ${_target_name}
     RUNTIME DESTINATION bin
 )
