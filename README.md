@@ -35,5 +35,6 @@ linuxdeploy-plugin-appimage can be configured using environment variables.
 
 - `UPDATE_INFORMATION="..."`: embed [update information](https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information) in the AppImage, and generate corresponding `.zsync` file
 - `SIGN=1`: set this variable to any value to enable signing of the AppImage
+- `SIGN_KEY=key_id`: GPG Key ID to use for signing. This environment variable is only used if `SIGN` is set.
 - `VERBOSE=1`: set this variable to any value to enable verbose output
 - `OUTPUT=filename`: change filename of resulting AppImage
