@@ -114,7 +114,7 @@ int main(const int argc, const char* const* const argv) {
     if (getenv("SIGN") != nullptr) {
         args.push_back(strdup("-s"));
 
-        const char *signingKey;
+        const char* signingKey;
         if ((signingKey = getenv("SIGN_KEY")) != nullptr) {
             args.push_back(strdup("--sign-key"));
             args.push_back(strdup(signingKey));
