@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # build at least once a month
+    - '0 0 0 * *'
 
 jobs:
   appimage-x86_64:
