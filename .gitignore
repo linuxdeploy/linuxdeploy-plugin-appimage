@@ -1,2 +1,8 @@
 *build*/
 .idea/
+*.swp
+*.AppImage*
+*.zsync
+*.save*
+squashfs-root/
+*AppDir*/
