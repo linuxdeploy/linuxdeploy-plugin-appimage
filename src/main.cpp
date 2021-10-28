@@ -129,6 +129,10 @@ int main(const int argc, const char* const* const argv) {
         args.push_back(strdup(getenv("OUTPUT")));
     }
 
+    if (getenv("NO_APPSTREAM") != nullptr) {
+        args.push_back(strdup("--no-appstream"));
+    }
+
     args.push_back(nullptr);
 
     std::cerr << "Running command: " << pathToAppimagetool;

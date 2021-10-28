@@ -15,7 +15,6 @@ When calling linuxdeploy, just add `--output appimage` to enable the plugin. Aft
 *For more information, see the [official AppImage packaging guide](https://docs.appimage.org/packaging-guide/native-binaries.html).*
 
 
-
 ### Standalone usage
 
 Like all linuxdeploy plugins, linuxdeploy-plugin-appimage is a standalone tool and can be used without linuxdeploy.
@@ -29,6 +28,7 @@ The official linuxdeploy AppImage ships with a fairly recent version of the plug
 
 *For more information on how linuxdeploy's plugin system works, please refer to [the documentation](https://docs.appimage.org/packaging-guide/linuxdeploy-user-guide.html#plugin-system).*
 
+
 ### Optional variables
 
 linuxdeploy-plugin-appimage can be configured using environment variables.
@@ -38,3 +38,4 @@ linuxdeploy-plugin-appimage can be configured using environment variables.
 - `SIGN_KEY=key_id`: GPG Key ID to use for signing. This environment variable is only used if `SIGN` is set.
 - `VERBOSE=1`: set this variable to any value to enable verbose output
 - `OUTPUT=filename`: change filename of resulting AppImage
+- `NO_APPSTREAM=1`: skip checking AppStream metadata for issues
