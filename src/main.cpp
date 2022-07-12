@@ -119,6 +119,12 @@ int main(const int argc, const char* const* const argv) {
             args.push_back(strdup("--sign-key"));
             args.push_back(strdup(signingKey));
         }
+
+        const char* signingArgs = getenv("SIGN_ARGS");
+        if (signingArgs != nullptr) {
+            args.push_back(strdup("--sign-args"));
+            args.push_back(strdup(signingArgs));
+        }
     }
 
     if (getenv("VERBOSE") != nullptr) {
