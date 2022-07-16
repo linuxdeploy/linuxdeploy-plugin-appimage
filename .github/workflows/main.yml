@@ -21,13 +21,13 @@ jobs:
     name: AppImage ${{ matrix.arch }}
     runs-on: ubuntu-18.04
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: ${{ matrix.ARCH }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
       - name: Install dependencies
-        if: ${{ matrix.arch == 'i386' }}
+        if: ${{ matrix.ARCH == 'i386' }}
         run: |
             sudo dpkg --add-architecture i386
             sudo apt-get update
@@ -37,7 +37,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: AppImage ${{ matrix.arch }}
+          name: AppImage ${{ matrix.ARCH }}
           path: linuxdeploy-plugin-appimage*.AppImage*
       - name: Upload release asset
         if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
@@ -45,7 +45,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: linuxdeploy-plugin-appimage*.AppImage*
-          asset_name: AppImage ${{ matrix.arch }}
+          asset_name: AppImage ${{ matrix.ARCH }}
 
   upload:
     name: Create release and upload artifacts
