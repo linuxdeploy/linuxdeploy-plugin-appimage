@@ -4,38 +4,30 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  release:
+    types: ['published', 'released']
   schedule:
     # build at least once a month
     - cron: '0 0 1 * *'
 
 jobs:
-  appimage-x86_64:
-    name: AppImage x86_64
+  appimage:
+    strategy:
+      matrix:
+        include:
+          - arch: 'x86_64'
+          - arch: 'i386'
+          
+    name: AppImage ${{ matrix.arch }}
     runs-on: ubuntu-18.04
     env:
-      ARCH: x86_64
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Build AppImage
-        run: bash -ex ci/build-appimage.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: AppImage x86_64
-          path: linuxdeploy-plugin-appimage*.AppImage*
-
-  appimage-i386:
-    name: AppImage i386
-    runs-on: ubuntu-18.04
-    env:
-      ARCH: i386
+      ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
       - name: Install dependencies
+        if: ${{ matrix.arch == 'i386' }}
         run: |
             sudo dpkg --add-architecture i386
             sudo apt-get update
@@ -45,14 +37,20 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: AppImage i386
+          name: AppImage ${{ matrix.arch }}
           path: linuxdeploy-plugin-appimage*.AppImage*
+      - name: Upload release asset
+        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: linuxdeploy-plugin-appimage*.AppImage*
+          asset_name: AppImage ${{ matrix.arch }}
 
   upload:
     name: Create release and upload artifacts
     needs:
-      - appimage-x86_64
-      - appimage-i386
+      - appimage
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
