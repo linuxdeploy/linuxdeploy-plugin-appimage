@@ -4,8 +4,6 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-  release:
-    types: ['published', 'released']
   schedule:
     # build at least once a month
     - cron: '0 0 1 * *'
@@ -37,13 +35,6 @@ jobs:
         with:
           name: AppImage ${{ matrix.ARCH }}
           path: linuxdeploy-plugin-appimage*.AppImage*
-      - name: Upload release asset
-        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
-        uses: shogo82148/actions-upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: linuxdeploy-plugin-appimage*.AppImage*
-          asset_name: AppImage ${{ matrix.ARCH }}
 
   upload:
     name: Create release and upload artifacts
