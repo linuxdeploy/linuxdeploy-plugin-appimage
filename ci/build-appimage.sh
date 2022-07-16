@@ -51,8 +51,7 @@ chmod +x linuxdeploy-"$ARCH".AppImage
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
 
 chmod +x appimagetool-"$AIK_ARCH".AppImage
-
-sed -i 's/AI\x02/\x00\x00\x00/' {appimagetool,linuxdeploy}*.AppImage
+dd if=/dev/zero of=appimagetool-"$AIK_ARCH".AppImage bs=1 count=3 seek=8 conv=notrunc
 
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ AppDir/appimagetool-prefix/
@@ -61,7 +60,7 @@ ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
 
 # deploy linuxdeploy-plugin-appimage
-sed -i 's|AI\x02|\x00\x00\x00|' linuxdeploy-"$ARCH".AppImage
+dd if=/dev/zero of=linuxdeploy-x86_64.AppImage bs=1 count=3 seek=8 conv=notrunc
 ./linuxdeploy-"$ARCH".AppImage --appimage-extract-and-run \
      --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg
