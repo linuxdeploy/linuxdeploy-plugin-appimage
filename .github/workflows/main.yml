@@ -14,9 +14,7 @@ jobs:
   appimage:
     strategy:
       matrix:
-        include:
-          - arch: 'x86_64'
-          - arch: 'i386'
+        arch: ['x86_64', 'i386']
           
     name: AppImage ${{ matrix.arch }}
     runs-on: ubuntu-18.04
