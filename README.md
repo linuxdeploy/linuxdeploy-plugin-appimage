@@ -39,3 +39,4 @@ linuxdeploy-plugin-appimage can be configured using environment variables.
 - `VERBOSE=1`: set this variable to any value to enable verbose output
 - `OUTPUT=filename`: change filename of resulting AppImage
 - `NO_APPSTREAM=1`: skip checking AppStream metadata for issues
+- `APPIMAGE_COMP=...`: compression algorithm appimagetool/mksquashfs should use (e.g., `xz`, `gzip`), see [appimagetool's repository](https://github.com/AppImage/AppImageKit/) for more information

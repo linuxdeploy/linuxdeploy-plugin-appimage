@@ -139,6 +139,12 @@ int main(const int argc, const char* const* const argv) {
         args.push_back(strdup("--no-appstream"));
     }
 
+    auto comp = getenv("APPIMAGE_COMP");
+    if (comp != nullptr) {
+        args.push_back(strdup("--comp"));
+        args.push_back(strdup(comp));
+    }
+
     args.push_back(nullptr);
 
     std::cerr << "Running command: " << pathToAppimagetool;
