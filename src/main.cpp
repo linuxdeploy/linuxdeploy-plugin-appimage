@@ -1,8 +1,12 @@
 // system includes
+#include <cassert>
 #include <cstring>
-#include <iostream>
 #include <dirent.h>
+#include <functional>
+#include <iostream>
 #include <libgen.h>
+#include <optional>
+#include <string>
 #include <unistd.h>
 #include <vector>
 
@@ -48,6 +52,41 @@ std::string findAppimagetool() {
     }
 
     return "";
+}
+
+/**
+ * Fetch variable from environment by name(s).
+ * The first name is treated as the currently accepted one, whereas the others are still supported but will trigger a
+ * warning.
+ * @param names One or more names
+ * @return value if available, std::nullopt otherwise
+ */
+std::optional<std::string> getEnvVar(std::initializer_list<std::string> names) {
+    assert(names.size() >= 1);
+
+    for (auto it = names.begin(); it != names.end(); ++it) {
+        const auto* value = getenv(it->c_str());
+
+        if (value == nullptr) {
+            continue;
+        }
+
+        if (it != names.begin()) {
+            std::cerr << "Warning: please use $" << *names.begin() << " instead of $" << *it << std::endl;
+        }
+
+        return value;
+    }
+
+    return std::nullopt;
+}
+
+void doSomethingWithEnvVar(std::initializer_list<std::string> names, const std::function<void(const std::string&)>& todo) {
+    const auto value = getEnvVar(names);
+
+    if (value.has_value()) {
+        todo(value.value());
+    }
 }
 
 int main(const int argc, const char* const* const argv) {
@@ -127,23 +166,42 @@ int main(const int argc, const char* const* const argv) {
         }
     }
 
-    if (getenv("VERBOSE") != nullptr) {
-        args.push_back(strdup("-v"));
-    }
+    constexpr auto appimagetool_verbose_arg = "-v";
 
-    if (getenv("OUTPUT") != nullptr) {
+    doSomethingWithEnvVar({"LDAI_VERBOSE", "VERBOSE"}, [&](const auto& value) {
+        (void) value;
+        args.push_back(strdup(appimagetool_verbose_arg));
+    });
+
+    // the only exception to prefixing is $DEBUG, which is used across multiple linuxdeploy plugins
+    doSomethingWithEnvVar({"DEBUG"}, [&](const auto& value) {
+        (void) value;
+
+        // avoid duplicates
+        if (std::find(args.begin(), args.end(), appimagetool_verbose_arg) == args.end()) {
+            args.push_back(strdup(appimagetool_verbose_arg));
+        }
+    });
+
+    doSomethingWithEnvVar({"LDAI_OUTPUT", "OUTPUT"}, [&](const auto& value) {
+        (void) value;
         args.push_back(strdup(getenv("OUTPUT")));
-    }
+    });
 
-    if (getenv("NO_APPSTREAM") != nullptr) {
+    doSomethingWithEnvVar({"LDAI_NO_APPSTREAM", "NO_APPSTREAM"}, [&](const auto& value) {
+        (void) value;
         args.push_back(strdup("--no-appstream"));
-    }
+    });
 
-    auto comp = getenv("APPIMAGE_COMP");
-    if (comp != nullptr) {
+    doSomethingWithEnvVar({"LDAI_COMP", "APPIMAGE_COMP"}, [&](const auto& value) {
         args.push_back(strdup("--comp"));
-        args.push_back(strdup(comp));
-    }
+        args.push_back(strdup(value.c_str()));
+    });
+
+    // $VERSION is already picked up by appimagetool
+    doSomethingWithEnvVar({"LDAI_VERSION"}, [&](const auto& value) {
+        setenv("VERSION", value.c_str(), true);
+    });
 
     args.push_back(nullptr);
 
