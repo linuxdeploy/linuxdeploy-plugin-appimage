@@ -199,7 +199,12 @@ int main(const int argc, const char* const* const argv) {
     });
 
     // $VERSION is already picked up by appimagetool
-    doSomethingWithEnvVar({"LDAI_VERSION"}, [&](const auto& value) {
+    doSomethingWithEnvVar({"LINUXDEPLOY_OUTPUT_APP_NAME"}, [&](const auto& value) {
+        setenv("APPIMAGETOOL_APP_NAME", value.c_str(), true);
+    });
+
+    // $VERSION is already picked up by appimagetool
+    doSomethingWithEnvVar({"LINUXDEPLOY_OUTPUT_VERSION", "LDAI_VERSION", "VERSION"}, [&](const auto& value) {
         setenv("VERSION", value.c_str(), true);
     });
 
