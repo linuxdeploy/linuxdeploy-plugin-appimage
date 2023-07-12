@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         arch: ['x86_64', 'i386']
-          
+
     name: AppImage ${{ matrix.arch }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       ARCH: ${{ matrix.ARCH }}
     steps:
@@ -40,7 +40,7 @@ jobs:
     name: Create release and upload artifacts
     needs:
       - appimage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
