@@ -1,18 +1,17 @@
 #! /bin/bash
 
-set -e
-set -x
+set -euxo pipefail
 
 # use RAM disk if possible
-if [ "$CI" == "" ] && [ -d /dev/shm ]; then
-    TEMP_BASE=/dev/shm
+if [ "${CI:-}" == "" ] && [ -d /docker-ramdisk ]; then
+    TEMP_BASE=/docker-ramdisk
 else
     TEMP_BASE=/tmp
 fi
 
 BUILD_DIR=$(mktemp -d -p "$TEMP_BASE" linuxdeploy-plugin-appimage-build-XXXXXX)
 
-cleanup () {
+cleanup() {
     if [ -d "$BUILD_DIR" ]; then
         rm -rf "$BUILD_DIR"
     fi
@@ -51,7 +50,6 @@ chmod +x linuxdeploy-"$ARCH".AppImage
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
 
 chmod +x appimagetool-"$AIK_ARCH".AppImage
-dd if=/dev/zero of=appimagetool-"$AIK_ARCH".AppImage bs=1 count=3 seek=8 conv=notrunc
 
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ AppDir/appimagetool-prefix/
@@ -60,7 +58,6 @@ ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
 
 # deploy linuxdeploy-plugin-appimage
-dd if=/dev/zero of=linuxdeploy-x86_64.AppImage bs=1 count=3 seek=8 conv=notrunc
 ./linuxdeploy-"$ARCH".AppImage --appimage-extract-and-run \
      --appdir AppDir -d "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.desktop \
     -i "$REPO_ROOT"/resources/linuxdeploy-plugin-appimage.svg

@@ -11,27 +11,25 @@ on:
 jobs:
   appimage:
     strategy:
+      fail-fast: false
       matrix:
-        arch: ['x86_64', 'i386']
+        ARCH: [x86_64, i386]
 
-    name: AppImage ${{ matrix.arch }}
+    name: AppImage ${{ matrix.ARCH }}
     runs-on: ubuntu-20.04
     env:
       ARCH: ${{ matrix.ARCH }}
+      APPIMAGE_EXTRACT_AND_RUN: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Install dependencies
-        if: ${{ matrix.ARCH == 'i386' }}
-        run: |
-            sudo dpkg --add-architecture i386
-            sudo apt-get update
-            sudo apt-get install -y g++-multilib libc6-dev:i386 libstdc++-5-dev:i386 zlib1g:i386 libfuse2:i386
-      - name: Build AppImage
-        run: bash -ex ci/build-appimage.sh
+      - name: Set up QEMU integration for Docker
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - name: Run build in Docker
+        run: bash -euxo pipefail ci/build-in-docker.sh
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: AppImage ${{ matrix.ARCH }}
           path: linuxdeploy-plugin-appimage*.AppImage*
