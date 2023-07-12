@@ -185,7 +185,7 @@ int main(const int argc, const char* const* const argv) {
 
     doSomethingWithEnvVar({"LDAI_OUTPUT", "OUTPUT"}, [&](const auto& value) {
         (void) value;
-        args.push_back(strdup(getenv("OUTPUT")));
+        args.push_back(strdup(value.c_str()));
     });
 
     doSomethingWithEnvVar({"LDAI_NO_APPSTREAM", "NO_APPSTREAM"}, [&](const auto& value) {
