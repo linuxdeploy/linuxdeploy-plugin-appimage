@@ -48,14 +48,14 @@ wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/lin
 chmod +x linuxdeploy-"$ARCH".AppImage
 
 # bundle appimagetool
-wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
 
 chmod +x appimagetool-"$AIK_ARCH".AppImage
 dd if=/dev/zero of=appimagetool-"$AIK_ARCH".AppImage bs=1 count=3 seek=8 conv=notrunc
 
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ AppDir/appimagetool-prefix/
-ln -s ../../appimagetool-prefix/usr/bin/appimagetool AppDir/usr/bin/appimagetool
+ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
 
 export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
 
