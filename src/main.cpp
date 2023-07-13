@@ -150,21 +150,20 @@ int main(const int argc, const char* const* const argv) {
         args.push_back(strdup("-g"));
     }
 
-    if (getenv("SIGN") != nullptr) {
+    doSomethingWithEnvVar({"LDAI_SIGN", "SIGN"}, [&](const auto& value) {
+        (void) value;
         args.push_back(strdup("-s"));
 
-        const char* signingKey;
-        if ((signingKey = getenv("SIGN_KEY")) != nullptr) {
+        doSomethingWithEnvVar({"LDAI_SIGN_KEY", "SIGN_KEY"}, [&](const auto& signKey) {
             args.push_back(strdup("--sign-key"));
-            args.push_back(strdup(signingKey));
-        }
+            args.push_back(strdup(signKey.c_str()));
+        });
 
-        const char* signingArgs = getenv("SIGN_ARGS");
-        if (signingArgs != nullptr) {
+        doSomethingWithEnvVar({"LDAI_SIGN_ARGS", "SIGN_ARGS"}, [&](const auto& signArgs) {
             args.push_back(strdup("--sign-args"));
-            args.push_back(strdup(signingArgs));
-        }
-    }
+            args.push_back(strdup(signArgs.c_str()));
+        });
+    });
 
     constexpr auto appimagetool_verbose_arg = "-v";
 
