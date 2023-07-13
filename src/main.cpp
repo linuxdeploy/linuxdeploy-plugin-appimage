@@ -135,20 +135,16 @@ int main(const int argc, const char* const* const argv) {
     args.push_back(strdup("appimagetool"));
     args.push_back(strdup(appdir.Get().c_str()));
 
-    auto updateInformation = getenv("UPDATE_INFORMATION");
-
-    // also provide shorter version of the environment variable
-    if (updateInformation == nullptr) {
-        updateInformation = getenv("UPD_INFO");
-    }
-
-    if (updateInformation != nullptr) {
-        std::cout << "Embedding update information: " << updateInformation << std::endl;
+    doSomethingWithEnvVar({"LDAI_UPDATE_INFORMATION", "UPDATE_INFORMATION", "LDAI_UPD_INFO", "UPD_INFO"}, [&](const auto& value) {
+        std::cout << "Embedding update information: " << value << std::endl;
         args.push_back(strdup("-u"));
-        args.push_back(updateInformation);
-    } else {
+        args.push_back(strdup(value.c_str()));
+    });
+
+    doSomethingWithEnvVar({"LDAI_GUESS_UPDATE_INFORMATION"}, [&](const auto& value) {
+        (void) value;
         args.push_back(strdup("-g"));
-    }
+    });
 
     doSomethingWithEnvVar({"LDAI_SIGN", "SIGN"}, [&](const auto& value) {
         (void) value;
