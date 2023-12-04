@@ -23,6 +23,8 @@ trap cleanup EXIT
 REPO_ROOT="$(readlink -f "$(dirname "$(dirname "$0")")")"
 OLD_CWD="$(readlink -f .)"
 
+pushd "$BUILD_DIR"
+
 bash "$REPO_ROOT"/ci/build-bundle.sh
 
 mv linuxdeploy-plugin-appimage-bundle AppDir
