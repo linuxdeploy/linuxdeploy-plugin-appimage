@@ -59,7 +59,7 @@ docker run \
 <<\EOF
 
 apt-get update
-apt-get install -y gcc g++ cmake git wget file curl
+apt-get install -y gcc g++ ninja-build cmake git wget file curl
 
 bash -euxo pipefail ci/build-appimage.sh
 
