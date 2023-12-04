@@ -47,9 +47,6 @@ ninja -v -j"$nprocs"
 
 env DESTDIR=linuxdeploy-plugin-appimage-bundle ninja -v install
 
-wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-"$ARCH".AppImage
-chmod +x linuxdeploy-"$ARCH".AppImage
-
 # linuxdeploy-plugin-appimage-bundle appimagetool
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
 
