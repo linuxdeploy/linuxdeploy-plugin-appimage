@@ -23,41 +23,9 @@ trap cleanup EXIT
 REPO_ROOT="$(readlink -f "$(dirname "$(dirname "$0")")")"
 OLD_CWD="$(readlink -f .)"
 
-pushd "$BUILD_DIR"
+bash "$REPO_ROOT"/ci/build-bundle.sh
 
-case "$ARCH" in
-    x86_64|armhf|aarch64)
-        AIK_ARCH="$ARCH"
-        ;;
-    i386)
-        AIK_ARCH="i686"
-        ;;
-    *)
-        echo "Architecture not supported: $ARCH" 1>&2
-        exit 1
-        ;;
-esac
-
-cmake -G Ninja "$REPO_ROOT" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_CCACHE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo "${EXTRA_CMAKE_ARGS[@]}"
-
-nprocs="$(nproc)"
-[[ "$nprocs" -gt 2 ]] && nprocs="$(nproc --ignore=1)"
-
-ninja -v -j"$nprocs"
-
-env DESTDIR=AppDir ninja -v install
-
-wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-"$ARCH".AppImage
-chmod +x linuxdeploy-"$ARCH".AppImage
-
-# bundle appimagetool
-wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-"$AIK_ARCH".AppImage
-
-chmod +x appimagetool-"$AIK_ARCH".AppImage
-
-./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
-mv squashfs-root/ AppDir/appimagetool-prefix/
-ln -s ../../appimagetool-prefix/AppRun AppDir/usr/bin/appimagetool
+mv linuxdeploy-plugin-appimage-bundle AppDir
 
 export UPD_INFO="gh-releases-zsync|linuxdeploy|linuxdeploy-plugin-appimage|continuous|linuxdeploy-plugin-appimage-$ARCH.AppImage"
 
