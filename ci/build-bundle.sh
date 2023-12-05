@@ -52,6 +52,10 @@ wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appima
 
 chmod +x appimagetool-"$AIK_ARCH".AppImage
 
+# as usual, qemu is not happy about the AppImage type 2 magic bytes
+# let's "fix" that
+dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=appimagetool-"$AIK_ARCH".AppImage
+
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ linuxdeploy-plugin-appimage-bundle/appimagetool-prefix/
 ln -s ../../appimagetool-prefix/AppRun linuxdeploy-plugin-appimage-bundle/usr/bin/appimagetool
