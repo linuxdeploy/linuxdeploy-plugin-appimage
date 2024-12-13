@@ -25,16 +25,16 @@ OLD_CWD=$(readlink -f .)
 
 pushd "$BUILD_DIR"
 
-if [ "$ARCH" == "x86_64" ]; then
-    EXTRA_CMAKE_ARGS=()
-elif [ "$ARCH" == "i386" ]; then
-    EXTRA_CMAKE_ARGS=("-DCMAKE_TOOLCHAIN_FILE=$REPO_ROOT/cmake/toolchains/i386-linux-gnu.cmake")
-else
-    echo "Architecture not supported: $ARCH" 1>&2
-    exit 1
-fi
+case "$ARCH" in
+    x86_64|i386|aarch64|armhf)
+        ;;
+    *)
+        echo "Architecture not supported: $ARCH" 1>&2
+        exit 1
+        ;;
+esac
 
-cmake "$REPO_ROOT" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_CCACHE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo "${EXTRA_CMAKE_ARGS[@]}"
+cmake "$REPO_ROOT" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_CCACHE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
 make -j$(nproc)
 

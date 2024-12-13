@@ -9,19 +9,15 @@ fi
 
 case "$ARCH" in
     x86_64)
-        image_prefix=amd64
         platform=linux/amd64
         ;;
     i386)
-        image_prefix=i386
         platform=linux/i386
         ;;
     armhf)
-        image_prefix=arm32v7
         platform=linux/arm/v7
         ;;
     aarch64)
-        image_prefix=arm64v8
         platform=linux/arm64/v8
         ;;
     *)
@@ -30,7 +26,7 @@ case "$ARCH" in
         ;;
 esac
 
-image="$image_prefix"/debian:stable
+image=debian:stable
 
 repo_root="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")"/..)"
 
@@ -40,7 +36,7 @@ repo_root="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")"/..)"
 uid="$(id -u)"
 
 # make sure Docker image is up to date
-docker pull "$image"
+docker pull --platform "$platform" "$image"
 
 docker run \
     --platform "$platform" \
@@ -59,7 +55,7 @@ docker run \
 <<\EOF
 
 apt-get update
-apt-get install -y gcc g++ cmake git wget file curl
+apt-get install -y gcc g++ cmake git wget file curl ninja-build
 
 bash -euxo pipefail ci/build-appimage.sh
 
