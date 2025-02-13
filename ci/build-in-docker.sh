@@ -38,10 +38,31 @@ uid="$(id -u)"
 # make sure Docker image is up to date
 docker pull --platform "$platform" "$image"
 
+extra_args=()
+[[ -t 0 ]] && extra_args+=("-t")
+
+tmpfile="$(mktemp -t linuxdeploy-plugin-appimage-build-XXXXX.sh)"
+cleanup() {
+    if [[ -f "$tmpfile" ]]; then
+        rm "$tmpfile"
+    fi
+}
+
+cat > "$tmpfile" <<\EOF
+set -euxo pipefail
+
+apt-get update
+apt-get install -y gcc g++ cmake git wget file curl ninja-build
+
+bash -euxo pipefail ci/build-appimage.sh
+EOF
+
+
 docker run \
     --platform "$platform" \
     --rm \
     -i \
+    "${extra_args[@]}" \
     -e ARCH \
     -e GITHUB_ACTIONS \
     -e GITHUB_RUN_NUMBER \
@@ -50,13 +71,6 @@ docker run \
     -v "$PWD":/out \
     -w /out \
     --tmpfs /docker-ramdisk:exec,mode=777 \
+    -v "$tmpfile":/linuxdeploy-plugin-appimage-build.sh:ro \
     "$image" \
-    bash -exo pipefail \
-<<\EOF
-
-apt-get update
-apt-get install -y gcc g++ cmake git wget file curl ninja-build
-
-bash -euxo pipefail ci/build-appimage.sh
-
-EOF
+    bash /linuxdeploy-plugin-appimage-build.sh
