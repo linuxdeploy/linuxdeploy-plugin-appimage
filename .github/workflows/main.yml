@@ -13,10 +13,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ARCH: [x86_64, i386, aarch64, armhf]
+        include:
+          - ARCH: x86_64
+            RUNS_ON: ubuntu-latest
+          - ARCH: i386
+            RUNS_ON: ubuntu-latest
+          - ARCH: aarch64
+            RUNS_ON: ubuntu-latest-arm
+          - ARCH: armhf
+            RUNS_ON: ubuntu-latest-arm
 
     name: AppImage ${{ matrix.ARCH }}
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.RUNS_ON }}
     env:
       ARCH: ${{ matrix.ARCH }}
       APPIMAGE_EXTRACT_AND_RUN: 1
