@@ -34,35 +34,9 @@ case "$ARCH" in
         ;;
 esac
 
-cmake "$REPO_ROOT" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_CCACHE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
-
-make -j$(nproc)
-
-make install DESTDIR=AppDir
-
-AIK_ARCH="$ARCH"
-[ "$ARCH" == "i386" ] && AIK_ARCH="i686"
-
 bash "$REPO_ROOT"/ci/build-bundle.sh
 
-mv linuxdeploy-plugin-appimage-bundle AppDir/
-
-# cannot use a simple symlink because the AppRun script in appimagetool does not use bash and cannot use $BASH_SOURCE
-# therefore, a symlink would alter $0, causing the script to detect the wrong path
-# we use a similar script here to avoid this AppImage from depending on bash
-cat > AppDir/usr/bin/appimagetool <<\EOF
-#! /bin/bash
-set -euo pipefail
-
-this_dir="$(readlink -f "$(dirname "$0")")"
-
-# make appimagetool prefer the bundled mksquashfs
-export PATH="$this_dir"/usr/bin:"$PATH"
-
-exec "$this_dir"/../../linuxdeploy-plugin-appimage-bundle/usr/bin/appimagetool "$@"
-
-EOF
-chmod +x AppDir/usr/bin/appimagetool
+mv linuxdeploy-plugin-appimage-bundle AppDir
 
 wget https://github.com/TheAssassin/linuxdeploy/releases/download/continuous/linuxdeploy-"$ARCH".AppImage
 chmod +x linuxdeploy-"$ARCH".AppImage

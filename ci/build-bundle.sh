@@ -58,6 +58,18 @@ dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=appimagetool-"$AIK_ARCH".App
 
 ./appimagetool-"$AIK_ARCH".AppImage --appimage-extract
 mv squashfs-root/ linuxdeploy-plugin-appimage-bundle/appimagetool-prefix/
-ln -s ../../appimagetool-prefix/AppRun linuxdeploy-plugin-appimage-bundle/usr/bin/appimagetool
+
+# cannot use a simple symlink because the AppRun script in appimagetool does not use bash and cannot use $BASH_SOURCE
+# therefore, a symlink would alter $0, causing the script to detect the wrong path
+# we use a similar script here to avoid this AppImage from depending on bash
+cat > linuxdeploy-plugin-appimage-bundle/usr/bin/appimagetool <<\EOF
+#! /bin/bash
+set -euo pipefail
+
+this_dir="$(readlink -f "$(dirname "$0")")"
+
+exec "$this_dir"/../../appimagetool-prefix/AppRun "$@"
+EOF
+chmod +x linuxdeploy-plugin-appimage-bundle/usr/bin/appimagetool
 
 mv linuxdeploy-plugin-appimage-bundle "$OLD_CWD"
