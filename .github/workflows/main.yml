@@ -29,7 +29,7 @@ jobs:
       ARCH: ${{ matrix.ARCH }}
       APPIMAGE_EXTRACT_AND_RUN: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
       - name: Run build in Docker
