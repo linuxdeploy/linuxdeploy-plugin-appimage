@@ -35,7 +35,7 @@ jobs:
       - name: Run build in Docker
         run: bash -euxo pipefail ci/build-in-docker.sh
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: AppImage ${{ matrix.ARCH }}
           path: linuxdeploy-plugin-appimage*.AppImage*
