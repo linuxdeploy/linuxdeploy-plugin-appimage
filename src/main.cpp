@@ -1,5 +1,6 @@
 // system includes
 #include <cassert>
+#include <climits>
 #include <cstring>
 #include <dirent.h>
 #include <functional>
