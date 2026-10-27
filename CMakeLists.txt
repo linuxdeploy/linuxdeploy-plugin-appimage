@@ -7,8 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # can be enabled globally, we do not expose any libraries
 set(flags "-Wall -Wextra -Werror")
 mark_as_advanced(flags)
-set(CMAKE_C_FLAGS ${flags})
-set(CMAKE_CXX_FLAGS ${flags})
+# append to keep toolchain flags
+string(APPEND CMAKE_C_FLAGS " ${flags}")
+string(APPEND CMAKE_CXX_FLAGS " ${flags}")
 
 add_subdirectory(lib)
 
